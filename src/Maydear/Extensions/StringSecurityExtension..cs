@@ -37,7 +37,7 @@ namespace System.Security.Cryptography
         #region HmacMD5
 
         /// <summary>
-        /// 独有干扰MD5加密
+        /// 带密钥MD5加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -49,13 +49,12 @@ namespace System.Security.Cryptography
                 return null;
             }
 
-            HMACMD5 md5Provider = new HMACMD5(key);
-
-            return md5Provider.ComputeHash(data.ToBytes());
+            HMACMD5 hmacMd5 = new HMACMD5(key);
+            return hmacMd5.ComputeHash(data.ToBytes());
         }
 
         /// <summary>
-        /// 独有干扰MD5加密
+        /// 带密钥MD5加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -71,7 +70,7 @@ namespace System.Security.Cryptography
         }
 
         /// <summary>
-        /// 独有干扰MD5加密
+        /// 带密钥MD5加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -87,7 +86,7 @@ namespace System.Security.Cryptography
         }
 
         /// <summary>
-        /// 独有干扰MD5加密并返回Base64格式
+        /// 带密钥MD5加密并返回Base64格式
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -103,7 +102,7 @@ namespace System.Security.Cryptography
         }
 
         /// <summary>
-        /// 独有干扰MD5加密
+        /// 带密钥MD5加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -133,8 +132,7 @@ namespace System.Security.Cryptography
             {
                 return null;
             }
-
-            MD5 md5Provider = new MD5CryptoServiceProvider();
+            MD5 md5Provider = System.Security.Cryptography.MD5.Create();
             return md5Provider.ComputeHash(data.ToBytes());
         }
 
@@ -172,10 +170,148 @@ namespace System.Security.Cryptography
 
         #endregion
 
+        #region HmacSHA512
+
+        /// <summary>
+        /// 带密钥SHA512加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA512加密后的二进制数组</returns>
+        public static byte[] HMACSHA512(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return null;
+            }
+            HMACSHA512 sha512Provider = new HMACSHA512(key);
+            return sha512Provider.ComputeHash(data.ToBytes());
+        }
+
+        /// <summary>
+        /// 带密钥SHA512加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA512加密后的十六进制编码字符串</returns>
+        public static string HMACSHA512ToHex(this string data, string key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+
+            byte[] hashBuff = data.HMACSHA512(key.ToBytes());
+
+            return hashBuff.ToHexString();
+        }
+
+        /// <summary>
+        /// 带密钥SHA512加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA512加密后的十六进制编码字符串</returns>
+        public static string HMACSHA512ToHex(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+            byte[] hashBuff = data.HMACSHA512(key);
+            return hashBuff.ToHexString();
+        }
+
+
+        /// <summary>
+        /// 带密钥SHA512加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA512加密后的Base64编码字符串</returns>
+        public static string HMACSHA512ToBase64(this string data, string key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+
+            byte[] hashBuff = data.HMACSHA512(key.ToBytes());
+            return hashBuff.ToBase64String();
+        }
+
+        /// <summary>
+        /// 带密钥SHA512加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA512加密后的十六进制编码字符串</returns>
+        public static string HMACSHA512ToBase64(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+            byte[] hashBuff = data.HMACSHA512(key);
+            return hashBuff.ToBase64String();
+        }
+
+        #endregion
+
+        #region SHA512
+
+        /// <summary>
+        /// HA256加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <returns>返回SHA512加密后的Base64编码密文</returns>
+        public static byte[] SHA512(this string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                return null;
+            }
+            var sha512 = System.Security.Cryptography.SHA512.Create();
+            return sha512.ComputeHash(data.ToBytes());
+        }
+
+
+        /// <summary>
+        /// HA256加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <returns>返回SHA512加密后的Base64编码密文</returns>
+        public static string SHA512ToBase64(this string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                return string.Empty;
+            }
+            byte[] inArray = data.SHA512();
+            return inArray.ToBase64String();
+        }
+
+        /// <summary>
+        /// HA256加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <returns>返回SHA512加密后的十六进制格式密文</returns>
+        public static string SHA512ToHex(this string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                return string.Empty;
+            }
+            byte[] inArray = data.SHA512();
+            return inArray.ToHexString();
+        }
+
+        #endregion
+
         #region HmacSha256
 
         /// <summary>
-        /// 独有干扰HA256加密
+        /// 带密钥SHA256加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -186,14 +322,13 @@ namespace System.Security.Cryptography
             {
                 return null;
             }
-
-            System.Security.Cryptography.HMACSHA256 sha256Provider = new System.Security.Cryptography.HMACSHA256(key);
-
+            HMACSHA256 sha256Provider = new HMACSHA256(key);
+            
             return sha256Provider.ComputeHash(data.ToBytes());
         }
 
         /// <summary>
-        /// 独有干扰HA256加密
+        /// 带密钥SHA256加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -211,7 +346,7 @@ namespace System.Security.Cryptography
         }
 
         /// <summary>
-        /// 独有干扰HA256加密
+        /// 带密钥SHA256加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -228,7 +363,7 @@ namespace System.Security.Cryptography
 
 
         /// <summary>
-        /// 独有干扰HA256加密
+        /// 带密钥SHA256加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -245,7 +380,7 @@ namespace System.Security.Cryptography
         }
 
         /// <summary>
-        /// 独有干扰HA256加密
+        /// 带密钥SHA256加密
         /// </summary>
         /// <param name="data">待加密的数据</param>
         /// <param name="key">加密的密钥</param>
@@ -275,8 +410,8 @@ namespace System.Security.Cryptography
             {
                 return null;
             }
-            SHA256Managed sHA256Managed = new SHA256Managed();
-            return sHA256Managed.ComputeHash(data.ToBytes());
+            var sHA256 = System.Security.Cryptography.SHA256.Create();
+            return sHA256.ComputeHash(data.ToBytes());
         }
 
 
@@ -326,8 +461,8 @@ namespace System.Security.Cryptography
                 return null;
             }
 
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-            SHA1 sha1Provider = System.Security.Cryptography.SHA1.Create();
+            byte[] bytes = data.ToBytes();
+            var sha1Provider = System.Security.Cryptography.SHA1.Create();
             return sha1Provider.ComputeHash(bytes);
         }
 
@@ -363,7 +498,105 @@ namespace System.Security.Cryptography
 
         #endregion
 
+        #region HmacSha1
+
+        /// <summary>
+        /// 带密钥SHA1加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA1加密后的二进制数组</returns>
+        public static byte[] HMACSHA1(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return null;
+            }
+            HMACSHA1 hmacSha1 = new HMACSHA1(key);
+            return hmacSha1.ComputeHash(data.ToBytes());
+        }
+
+        /// <summary>
+        /// 带密钥SHA1加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA1加密后的十六进制编码字符串</returns>
+        public static string HMACSHA1ToHex(this string data, string key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+
+            byte[] hashBuff = data.HMACSHA1(key.ToBytes());
+
+            return hashBuff.ToHexString();
+        }
+
+        /// <summary>
+        /// 带密钥SHA1加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA1加密后的十六进制编码字符串</returns>
+        public static string HMACSHA1ToHex(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+            byte[] hashBuff = data.HMACSHA1(key);
+            return hashBuff.ToHexString();
+        }
+
+
+        /// <summary>
+        /// 带密钥SHA1加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA1加密后的Base64编码字符串</returns>
+        public static string HMACSHA1ToBase64(this string data, string key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+
+            byte[] hashBuff = data.HMACSHA1(key.ToBytes());
+            return hashBuff.ToBase64String();
+        }
+
+        /// <summary>
+        /// 带密钥SHA1加密
+        /// </summary>
+        /// <param name="data">待加密的数据</param>
+        /// <param name="key">加密的密钥</param>
+        /// <returns>返回HMACSHA1加密后的十六进制编码字符串</returns>
+        public static string HMACSHA1ToBase64(this string data, byte[] key)
+        {
+            if (data.IsNullOrEmpty() || key.IsNullOrEmpty())
+            {
+                return data;
+            }
+            byte[] hashBuff = data.HMACSHA1(key);
+            return hashBuff.ToBase64String();
+        }
+
+        #endregion
+
         #region AesEncrypt
+
+        /// <summary>
+        /// AES加密
+        /// </summary>
+        /// <param name="data">待加密的明文</param>
+        /// <param name="password">加密公钥</param>
+        /// <param name="iv">向量</param>
+        /// <param name="mode">加密模式</param>
+        /// <param name="padding">排列模式</param>
+        /// <returns>返回一个二进制数组的密文</returns>
         public static byte[] AesEncrypt(this string data, byte[] password, byte[] iv, CipherMode mode, PaddingMode padding)
         {
             if (data.IsNullOrEmpty() || password.IsNullOrEmpty())
@@ -390,6 +623,7 @@ namespace System.Security.Cryptography
             ICryptoTransform cTransform = aesProvider.CreateEncryptor();
             return cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
         }
+        
         /// <summary>
         /// AES加密【Cipher：ECB，Padding：PKCS7】
         /// </summary>
